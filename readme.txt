@@ -112,6 +112,11 @@ To cross-compile the Windows version of the Å-machine tools under Linux
 	cd src
 	make aamshow.exe aambundle.exe
 
+On ubuntu LTS, install the following to dependencies before compiling:
+
+	sudo apt install build-essential xa65
+
+
 Note that when aambundle is built, several files are copied from src/js and
 src/6502 into the resulting executable file. To rebuild the binary files in
 src/6502, run "make" in that directory. This requires the xa65 assembler.

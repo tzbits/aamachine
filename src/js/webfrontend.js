@@ -31,7 +31,7 @@ var wants_dark_mode = window.matchMedia && window.matchMedia('(prefers-color-sch
 
 // These are turned into labelled checkboxes in the #aacheckboxes div
 var toggles = [
-	{id: "aacb-fade", text: "Fading text", init: true},
+	{id: "aacb-fade", text: "Fading text", init: false},
 	{id: "aacb-links", text: "Hyperlinks", init: true},
 	{id: "aacb-hovertype", text: "Link previews", tooltip: "Preview what a link will do when hovering over it", init: true},
 	{id: "aacb-smoothscroll", text: "Smooth scrolling", init: false},
@@ -347,7 +347,7 @@ window.run_game = function(story64, options) {
 		protected_inp: "",
 		transcript: aatranscript,
 		viewing_script: false,
-		sticky_focus: false,
+		sticky_focus: true,
 		always_refocus: false,
 		scroll_anchor: null,
 		self_link_span: null,

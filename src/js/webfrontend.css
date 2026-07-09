@@ -8,7 +8,7 @@ html {
 	--theme-medium: #888888;
 	--theme-light: #cccccc;
 	--theme-lightest: #eeeeee;
-	--accent-dark: #c95c03; /* An orange color chosen by forum poll */
+	--accent-dark: #909EBE;
 	--accent-light: #fc8f36; /* Will it work? Only real-world testing can say! */
 }
 
@@ -26,19 +26,19 @@ html {
 	--menu-hover: var(--theme-lightest); /* Menu text when hovered (for options) */
 	--panel-dark: var(--theme-dark); /* Transcript panel bg/fg depending on mode */
 	--panel-light: var(--theme-light); /* Transcript panel fg/bg depending on mode */
-	
+
 	--progress-bg: var(--theme-light); /* Background of progress bar */
 	--progress-top: var(--accent-light); /* Top half of progress bar */
 	--progress-bottom: var(--accent-dark); /* Bottom half of progress bar */
-	
+
 	--night-link: var(--accent-dark); /* Night mode link */
 	--night-link-hover: var(--accent-light); /* Night mode link, hovered */
 	--day-link: var(--accent-dark); /* Day mode link */
 	--day-link-hover: var(--accent-light); /* Day mode link, hovered */
-	
+
 	--font-status: Geneva, sans-serif; /* Status bar and menus */
-	--font-body: Georgia, serif; /* Main body text */
-	
+	--font-body: 'Inter', serif; /* Main body text */
+
 	--night-scroll-fg: var(--theme-medium);
 	--night-scroll-bg: var(--theme-dark);
 	--day-scroll-fg: var(--theme-medium);
@@ -68,6 +68,8 @@ html, body, #aabody1, #aabody2, #aabody3, #aadefaults, #aadefaults2 {
 	width: 100%;
 	height: 100%;
 	margin: 0;
+	font-size: 1.02em;
+	font-kerning: normal;
 }
 
 body.enlarge {
@@ -84,7 +86,7 @@ h2 {
 }
 
 #aacontainer {
-	max-width: 60ch;
+	max-width: 65ch;
 	margin: auto;
 	position: relative;
 	line-height: 1.35em;
