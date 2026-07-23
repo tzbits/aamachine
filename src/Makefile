@@ -96,19 +96,19 @@ table_c64terp.h:	6502 6502/c64_crunched.bin mkheader
 table_weblicense.h:	js/license.txt mkheader
 			./mkheader table_weblicense <$< >$@
 
-table_css.h:		js/webfrontend.css mkheader
+table_css.h:		js/webfrontend-fork.css mkheader
 			./mkheader table_css <$< >$@
 
 table_engine.h:		js/engine.js mkheader
 			./mkheader table_engine <$< >$@
 
-table_front.h:		js/webfrontend.js mkheader
+table_front.h:		js/webfrontend-fork.js mkheader
 			./mkheader table_front <$< >$@
 
 table_jquery.h:		js/jquery-3.4.1.min.js mkheader
 			./mkheader table_jquery <$< >$@
 
-table_play.h:		js/webfrontend.html mkheader
+table_play.h:		js/webfrontend-fork.html mkheader
 			./mkheader table_play <$< >$@
 
 .PHONY:	all clean tidy install uninstall distclean windows 6502
