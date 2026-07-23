@@ -3,7 +3,7 @@
 html {
 	/* These seven basic colors are used for most of the interface */
 	/* See below for how they're applied */
-	--theme-darkest: #000000;
+	--theme-darkest: #110000;
 	--theme-dark: #222222;
 	--theme-medium: #888888;
 	--theme-light: #cccccc;
@@ -73,7 +73,7 @@ html, body, #aabody1, #aabody2, #aabody3, #aadefaults, #aadefaults2 {
 }
 
 body.enlarge {
-	font-size: 2em;
+	font-size: 1.5em;
 }
 
 /* This undoes the normal h2 styling from https://searchfox.org/mozilla-central/source/layout/style/res/html.css */
@@ -207,12 +207,21 @@ h2 {
 
 #aamain {
 	overflow-y: auto;
+
+	/* Hides scrollbar for Chrome, Safari, and Edge */
+	&::-webkit-scrollbar { display: none; }
+	/* Hides scrollbar for Firefox and IE/Edge Legacy */
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
 	font-family: var(--font-body);
 	height: 80%;
 	margin: .3em;
 	padding-right: 1.3em;
 	clear: right;
 }
+
+
 
 .nofont #aamain {
 	font-family: serif;
