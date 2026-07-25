@@ -313,16 +313,6 @@ a {
     text-decoration: inherit;
 }
 
-.aalink {
-    color: var(--link);
-    cursor: pointer;
-}
-
-.aalink:hover {
-    color: var(--link-hover);
-    text-decoration: underline;
-}
-
 .aailink {
     color: var(--link);
 }
@@ -330,28 +320,6 @@ a {
 .aailink:hover {
     color: var(--link-hover);
     text-decoration: underline;
-}
-
-@keyframes fadelink {
-    0% {
-        color: var(--link);
-    }
-    to {
-        color: inherit;
-    }
-}
-
-.aadeadlink {
-    animation-name: fadelink;
-    animation-duration: .9s;
-    animation-delay: .1s;
-    animation-fill-mode: both;
-    cursor: text;
-}
-
-.aahidelink {
-    color: inherit;
-    cursor: text; /* Since now they're <a>s, they default to a pointer */
 }
 
 .aareveal {

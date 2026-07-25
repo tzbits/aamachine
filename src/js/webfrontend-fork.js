@@ -353,8 +353,6 @@
             sticky_focus: true,
             always_refocus: false,
             scroll_anchor: null,
-            self_link_span: null,
-            self_link_str: "",
             storage_key: null,
             mainarray: [],
             statusarray: null,
@@ -362,7 +360,6 @@
             divs: [],
             seen_index: 0,
             seen_divs: [],
-            links_enabled: false,
             audio: {},
 
             flush: function () {
@@ -374,7 +371,6 @@
                 this.transcript.par();
                 this.scroll_anchor = null;
                 this.divs = [];
-                this.links_enabled = false
                 this.set_body(null);
             },
             clear_all: function () {
@@ -410,30 +406,8 @@
                 }
             },
             clear_links: function () {
-                var i, array;
-
-                ['.aalink', '.aahidelink'].forEach(function (cl) {
-                    var list;
-
-                    list = $('#aamain ' + cl);
-                    list.off('mouseover click');
-                    list.removeClass(cl).addClass('aadeadlink');
-                    // 1 is a workaround because Safari doesn't retrigger the animation.
-                    if (1 || !document.getElementById("aacb-fade").checked || !io.links_enabled) {
-                        list.css("animation-name", "none");
-                        list.css("color", "inherit");
-                    }
-                });
-                array = this.mainarray;
-                for (i = 0; i < array.length; i++) {
-                    if (array[i].t == "el" || array[i].t == "esl" || array[i].t == "erl") { // enter link / enter self link / enter resource link
-                        array[i].t = "edl"; // enter dead link
-                    } else if (array[i].t == "ll" || array[i].t == "lsl" || array[i].t == "lrl") { // leave link / leave self link / leave resource link
-                        array[i].t = "ldl"; // leave dead link
-                    } else if (array[i].t == "i") { // input
-                        array[i].t = "di"; // dead input
-                    }
-                }
+                // Action links are rendered as ordinary text in this fork.
+                // Resource links remain usable and are handled separately below.
             },
             clear_old: function () {
                 var i, newpart, anchor;
@@ -532,9 +506,6 @@
                 if (!this.in_status) {
                     this.transcript.print(str);
                 }
-                if (this.self_link_span) {
-                    this.self_link_str += str.toLowerCase();
-                }
                 this.currarray.push({t: "t", s: str});
             },
             nbsp: function () {
@@ -543,9 +514,6 @@
                 this.after_text = true;
                 if (!this.in_status) {
                     this.transcript.print('\u00A0');
-                }
-                if (this.self_link_span) {
-                    this.self_link_str += " "; // Don't put nbsps in links! That's why we don't just delegate to this.print(' ')
                 }
                 this.currarray.push({t: "t", s: '\u00A0'});
             },
@@ -565,9 +533,6 @@
                     for (i = 0; i < n; i++) {
                         this.transcript.print(" ");
                     }
-                }
-                if (this.self_link_span) {
-                    this.self_link_str += " ";
                 }
                 this.currarray.push({t: "sn", n: n});
             },
@@ -610,24 +575,14 @@
                 }
                 this.currarray.push({t: "p"});
             },
-            print_input: function (str, link) {
+            print_input: function (str) {
                 var span;
 
                 this.scroll_anchor = this.current;
-                if (link) {
-                    span = document.createElement("h2"); // Using an H2 instead of a span makes it easier for screen readers to jump to it
-                    $(span).addClass(io.links_enabled ? "aalink" : "aahidelink");
-                    $(span).addClass("aainputtext"); // For styling input differently, if desired; currently unused
-                    span.href = "#0";
-                    span.appendChild(document.createTextNode(str));
-                    this.current.appendChild(span);
-                    this.install_link(span, str);
-                } else {
-                    span = document.createElement("h2");
-                    $(span).addClass("aainputtext"); // For styling input differently, if desired; currently unused
-                    span.appendChild(document.createTextNode(str));
-                    this.current.appendChild(span);
-                }
+                span = document.createElement("h2"); // Using an H2 makes it easier for screen readers to jump to it
+                $(span).addClass("aainputtext"); // For styling input differently, if desired; currently unused
+                span.appendChild(document.createTextNode(str));
+                this.current.appendChild(span);
                 this.transcript.print(str);
                 this.transcript.line();
                 this.current.style["margin-bottom"] = ".3em";
@@ -826,68 +781,25 @@
                     this.in_status = false;
                 }
             },
-            install_link: function (span, str) {
-                $(span).on("mouseover", function () {
-                    var old;
-                    if (status == aaengine.status.get_input && io.links_enabled) {
-                        old = io.protected_inp;
-                        if (old && old.length && old[old.length - 1] != " ") old += " ";
-                        $(io.aainput).val(old + str);
-                    }
-                });
-                $(span).on("mouseout", function () {
-                    if (status == aaengine.status.get_input && io.links_enabled) {
-                        $(io.aainput).val(io.protected_inp);
-                    }
-                });
-                $(span).on("click", function () {
-                    var old;
-                    if (!io.links_enabled || io.viewing_script) {
-                        return true;
-                    } else if (status == aaengine.status.get_input ||
-                        status == aaengine.status.get_key) {
-                        old = "";
-                        $(io.aainput).val(old + str);
-                        io.sticky_focus = false;
-                        $(io.aainput).submit();
-                    }
-                    return false;
-                });
-            },
             have_links: function () {
-                return io.links_enabled;
+                // Causes (interpreter supports links) to always fail.
+                return false;
             },
+            // The engine still calls these hooks when a story contains action
+            // links. Keeping them as structural no-ops lets the linked text
+            // render normally without making it clickable.
             enter_link: function (str) {
-                var span;
                 this.ensure_par();
-                span = document.createElement("a"); // Using an A instead of a span makes it clear that this is a link, and makes it easier for screen readers to jump to them
-                $(span).addClass(io.links_enabled ? "aalink" : "aahidelink");
-                span.href = "#0";
-                this.current.appendChild(span);
-                this.install_link(span, str);
-                this.current = span;
                 this.currarray.push({t: "el", s: str});
             },
             leave_link: function () {
-                this.current = this.current.parentNode;
                 this.currarray.push({t: "ll"});
             },
             enter_self_link: function () {
-                var span;
                 this.ensure_par();
-                span = document.createElement("a"); // As above
-                $(span).addClass(io.links_enabled ? "aalink" : "aahidelink");
-                span.href = "#0";
-                this.current.appendChild(span);
-                this.self_link_span = span;
-                this.self_link_str = "";
-                this.current = span;
                 this.currarray.push({t: "esl"});
             },
             leave_self_link: function () {
-                this.current = this.current.parentNode;
-                this.install_link(this.self_link_span, this.self_link_str);
-                this.self_link_span = null;
                 this.currarray.push({t: "lsl"});
             },
             transform_url: function (url) {
@@ -905,6 +817,7 @@
                 $(a).addClass("aailink");
                 a.href = this.transform_url(res.url);
                 a.setAttribute("target", "_blank");
+                a.setAttribute("rel", "noopener noreferrer");
                 $(a).on("click", function (e) {
                     e.stopPropagation();
                 });
@@ -1347,20 +1260,6 @@
             io.maybe_focus();
         }
 
-        function update_hyperlinks() {
-            var en;
-
-            en = false;
-            if (en != io.links_enabled) {
-                io.links_enabled = en;
-                if (en) {
-                    $(".aahidelink").removeClass("aahidelink").addClass("aalink");
-                } else {
-                    $(".aalink").removeClass("aalink").addClass("aahidelink");
-                }
-            }
-        }
-
         $("#aacb-dark").on("change", function () {
             update_globalstyle();
         });
@@ -1531,7 +1430,7 @@
             stored_state = JSON.parse(stored_state);
             if (stored_state.cfg) {
                 toggles.forEach(function (t) {
-                    if (typeof (stored_state.cfg[t.id] !== "undefined")) {
+                    if (typeof stored_state.cfg[t.id] !== "undefined") {
                         document.getElementById(t.id).checked = stored_state.cfg[t.id];
                     }
                 });
@@ -1560,7 +1459,6 @@
             status = aaengine.async_restart();
         }
         update_globalstyle();
-        update_hyperlinks();
         io.scroll_anchor = null;
         io.activate_input();
     };
