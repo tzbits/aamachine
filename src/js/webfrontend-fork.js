@@ -1035,7 +1035,7 @@
                     if (this.scroll_anchor) {
                         scroll_to(this.scroll_anchor);
                     } else {
-                        scroll_to(this.aainput);
+                        main.scrollTop = 0;
                     }
                 } else if (this.sticky_focus || this.always_refocus) {
                     this.aainput.focus();
